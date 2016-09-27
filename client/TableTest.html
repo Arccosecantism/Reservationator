@@ -14,71 +14,199 @@ table, th, td {
 
 
 <table style="width:100%">
-	<tr>
-		<th>Monday</th>
-		<th>Tuesday</th>
-		<th>Wednesday</th>
-		<th>Thursday</th>
-		<th>Friday</th>
-	</tr>
+
+	<script>				//makes the table
 	
-	<script>
 	
+	
+	
+	var startIncrement = 2		// How many days you start into the month
+	var days = 30;				//How many days in the month
+	var weekLength = 5			//How many days you care about
+	
+	
+	
+	
+	
+	var startIncrementCounter = startIncrement;
+	var tableStr = ""
+	
+	var startCounting = false
+	
+	weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	
+	tableStr += "<tr>"
+	for (i = 0 ; i < weekLength; i++)
+	{
+		tableStr += "<th>"
+		tableStr += weekDays[i]
+		tableStr += "</th>"
+	}
+	tableStr += "</tr>"
+	document.write(tableStr);
 	
 	
 	
 	var date = 0;
-	var weekLength = 5
-	var startIndex  = 0
-	var days = 28;
-	function incrementDate(times, days)
+	
+	tableStr = ""
+	
+	
+	function incCapDate(times, days)	//Increments the date <times> times. It also caps the date at the day max, 
+										//turning it to a "". Also takes care of starting <startIncrement> days into the month
 	{
+		if (times > 0)
+		{
+			if ((date !== "" || startCounting === true) && startIncrementCounter === 0)
+			{
+				if (startCounting === true )
+				{
+					date = 0;
+					startCounting = false;
+				}
+
+				date += 1
+				if (date > days)
+				{
+					date = ""
+				}
+				incCapDate(times-1, days)
+
+			
+			}
+			else if (startIncrementCounter > 0)
+			{
+				date = ""
+				startIncrementCounter -= 1
+				if (startIncrementCounter === 0)
+				{
+					startCounting = true;
+				}
+				console.log(startIncrementCounter)
+				incCapDate(times-1, days)
+			}
+		}
+	}
+
+	
+	
+	for (i = 0; i < Math.ceil((days+startIncrement+1)/7); i++)	//for each week to be displayed
+	{
+		var checkAllSpaces = true
+		tableStr += "<tr>"
+		for (k = 0; k < weekLength; k++)					//for each week day
+		{
+			tableStr += "<td>"
+			incCapDate(1, days)
+			if (date !== "")
+			{
+				checkAllSpaces = false
+			}
+			tableStr += date.toString()						//build the string
+			tableStr += "</td>"
+		}
 		
-		if (date < days)
+		tableStr += "</tr>"
+		if (checkAllSpaces === false)		//if a row in the table is all blank, don't display it
 		{
-			date = date+1
+			document.write(tableStr);		//write the row
 		}
-		if (times > 1)
-		{
-			incrementDate(times-1)
-		}
+		
+		tableStr = ""
+		incCapDate(7-weekLength, days)
+		
 	}
 	
-	function capNumList(num, days)
-	{
-		if (num < days && num >= 0)
-		{
-			return numList[num]
-		}
-		
-		else 
-		{
-			return "";
-		}
-	}
 	
-	numList = []
-	for (i = 1; i <= days; i++)
-	{
-		numList.push(i);
-	}
-	for (i = 0; i < days/7 ; i++)
-	{
+	
+
 		
-		for (k = 0; k < length; k++)
-		{
-			incrementDate(1, days)
-		}
 		
-		document.write("<tr>" + "<td>"+ capNumList(date, days)+ "</td>" + "<td>"+ capNumList(date+1, days) + "</td>"  +
-			"<td>"+ capNumList(date+2, days) + "</td>"  + "<td>"+ capNumList(date+3, days) + "</td>"  + "<td>"+ capNumList(date+4, days) + "</td>"  + "</tr>")
-		incrementDate(2, days)
 		
-	}
+		
 	
 	
 	</script>
+	
+</table>
 
+<table>
+	<hr>
+	
+	
+	<script>				//makes the table
+	
+	
+	
+	var schedule = {periods: ["1","2","3","4", "5"], times: [ ["8:15", "9:47"], ["9:52", "11:24"], ["12:06", "1:38"], ["1:43", "3:15"], ["6", "7"] ]}
+	
+	var resources = [{name: "ChromeBooks_1", ID: "000"}, {name: "ChromeBooks_2", ID: "001"}, {name: "IPads_1", ID: "002"}, {name: "Something_Else", ID: "003"}, {name: "Something_Else_2", ID: "004"}]
+		
+	var periodNames = []
+	var timeIntervals = []
+	for (i = 0; i < schedule.periods.length; i++)
+	{
+		periodNames.push("Period "+ schedule.periods[i])
+	}
+	for (i = 0; i < schedule.times.length; i++)
+	{
+		timeIntervals.push(schedule.times[i][0] + "-" + schedule.times[i][1])
+	}
+	
+	
+	
+	
+	
+	var tableStr = ""
+
+	
+	tableStr += "<tr>"
+	for (i = -1 ; i < periodNames.length; i++)
+	{
+		
+		tableStr += "<th>"
+		if (i > -1)
+		{
+			tableStr += periodNames[i] + ": " + timeIntervals[i]
+		}
+		tableStr += "</th>"
+		console.log(tableStr)
+	}
+	tableStr += "</tr>"
+	document.write(tableStr)
+	
+	tableStr =  ""
+	
+	
+	for (i = 0; i < resources.length; i++)	//for each week to be displayed
+	{
+		tableStr += "<tr>"
+		tableStr += "<td>" + resources[i].name + "</td>"
+		for (k = 0; k < periodNames.length; k++)					//for each week day
+		{
+			tableStr += "<td>"
+			tableStr += "<input type=checkbox name=vehicle value=Bike> <br>"
+			tableStr += "</td>"
+		}
+		
+		tableStr += "</tr>"
+
+		document.write(tableStr);		
+
+		
+		tableStr = ""
+		
+	}
+	
+
+
+		
+		
+		
+		
+	
+	
+	</script>
 </table>
 
 </body>
