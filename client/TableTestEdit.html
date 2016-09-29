@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Table Trial</title>
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+</style>
+</head>
+<body>
+
+	<script id="Calendar" type="text/template">
+	
+		<table style="width:100%">
+		
+			<tr>
+				
+				<td
+			
+			</tr>
+		
+		
+		</table>
+	
+	</script>
+
+	<script>
+	"use strict";
+	function DocumentWriter()
+	{
+		var docTxt = ""
+		var clearText = function()
+		{
+			docTxt = ""
+		}
+		var addText = function(txt)
+		{
+			docTxt += txt
+		}
+		var overwriteText = function(txt)
+		{
+			docTxt = txt;
+		}
+		var documentWrite = function()
+		{
+			document.write(docTxt)
+		}
+		var documentWriteClear = function()
+		{
+			document.write(docTxt)
+			docTxt = ""
+		}
+		var consoleLog = function()
+		{
+			console.log("StoredText:  " + docTxt)
+		}
+	}
+	
+	function Calendar(weekLength, startMonth, startYear)
+	{
+		var dayNames = [];
+		var dayCells = [];
+		var month = startMonth
+		var year = startYear
+		
+		
+		var addDayName = function(ftext, fcell_id)
+		{
+			if (typeof fcell_id === "undefined")
+			{
+				var n_id = "dn" + dayNames.length.toString()
+				dayNames.push({text: ftext, cell_id: n_id})
+			}
+			else
+			{
+				dayNames.push({text: ftext, cell_id: fcell_id})
+			}
+			
+		}
+		
+		var addRow = function()
+		{
+			dayCells.push([])
+		}
+		
+		var addCell = function(ftext, row, fcell_id)
+		{
+			if (typeof fcell_id === "undefined")
+			{
+				if (row >= dayCells.length)
+				{
+					console.log("Row is out of bounds")
+				}
+				var n_id = "r" + row.toString() + "c" + dayCells[row].length.toString()
+				dayCells[row].push({text: ftext, cell_id: n_id})					
+			}
+			
+			else
+			{
+				if (row >= dayCells.length)
+				{
+					console.log("Row is out of bounds")
+				}
+				dayCells[row].push({text: ftext, cell_id: fcell_id})
+			}
+		}
+		
+		var getStartDay = function()
+		{
+			var dateStr = year.toString()
+			if (month >= 10)
+			{
+				dateStr += "-" 
+			}
+			else
+			{
+				dateStr += "-0"
+			}
+			
+			dateStr += month.toString()
+			dateStr += "-01"
+			
+			var tmpDate = new Date(dateStr);
+			
+			var whichDay = tmpDate.getDay()
+			//console.log(tmpDate.getDay());
+			
+			return whichDay
+		}
+		
+		
+		var isLeapYear = function()
+		{
+			return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+		}
+		
+		
+		//var tableWriter = new DocumentWriter() 
+		
+		
+		var weekDays = []
+		var monthList = []
+		
+		
+		
+		var setupDateConstants = function()
+		{
+			
+			weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+			monthList = [	{name: "January", days: 31},
+							{name: "February", days: 28},
+							{name: "March", days: 31},
+							{name: "April", days: 30},
+							{name: "May", days: 31},
+							{name: "June", days: 30},
+							{name: "July", days: 31},
+							{name: "August", days: 31},
+							{name: "September", days: 30},
+							{name: "October", days: 31},
+							{name: "November", days: 30},
+							{name: "December", days: 31}]
+			if (isLeapYear())
+			{
+				monthList[1].days = 29;
+			}
+		
+		}
+		
+		
+		setupDateConstants()
+		
+		var setupWeekDays = function()
+		{
+			for (var i = 0 ; i < weekLength; i++)
+			{
+				addDayName(weekDays[i])
+			}
+		}
+		setupWeekDays()
+		
+		
+		
+
+		
+		
+
+
+		
+		var incMonth = function()
+		{
+			
+			month++;
+			if (month >= 12)
+			{
+				month = 0;
+				year ++;
+				//document.getElementById("yearText").innerHTML = year.toString()
+			}
+			//document.getElementById("monthText").innerHTML = months[monthCounter]
+			//console.log(months[monthCounter])
+		}
+		
+		var decMonth = function()
+		{
+			month--;
+			if (month < 0)
+			{
+				month = 11;
+				year --;
+				//document.getElementById("yearText").innerHTML = year.toString()
+			}
+			//document.getElementById("monthText").innerHTML = months[monthCounter]
+			//console.log(months[monthCounter])
+		}
+		
+		/*
+		calendar.push([])
+		calendar[0].push("<button id=PrevMonth type=button><<<</button>")
+		calendar[0].push()
+		tableWriter.addText("<tr>") 
+		tableWriter.addText("<th>" + "<button id=PrevMonth type=button><<<</button>" + "</th>" )
+		tableWriter.addText("<th id=monthText>" + months[monthCounter] + "</th>")
+		tableWriter.addText("<th id=yearText>" + year.toString() + "</th>" )
+		tableWriter.addText("<th>" + "<button id=NextMonth type=button>>>></button>" + "</th>" )
+		tableWriter.addText("</tr>")
+		tableWriter.documentWriteClear();
+		
+		document.getElementById("NextMonth").onclick = incMonth;
+		document.getElementById("PrevMonth").onclick = decMonth;
+		*/
+
+		
+
+		var startDay = getStartDay(month+1, year)// How many days you start into the month
+		var startDayCounter = startDay;
+		
+		var date = 0;
+		var startCounting = false
+		
+		
+		var incCapDate = function(times)	//Increments the date <times> times. It also caps the date at the day max, 
+											//turning it to a "". Also takes care of starting <startIncrement> days into the month
+		{
+		
+			var dim = monthList[month].days
+			if (times > 0)
+			{
+				if ((date !== "" || startCounting === true) && startDayCounter === 0)
+				{
+					if (startCounting === true )
+					{
+						date = 0;
+						startCounting = false;
+					}
+
+					date += 1
+					if (date > dim)
+					{
+						date = ""
+					}
+					incCapDate(times-1)
+
+				
+				}
+				else if (startDayCounter > 0)
+				{
+					date = ""
+					startDayCounter --
+					if (startDayCounter === 0)
+					{
+						startCounting = true;
+					}
+					incCapDate(times-1)
+				}
+			}
+		}
+
+		var setupDays = function()
+		{
+			var num_of_days = monthList[month].days
+			var blankRow = false
+			console.log(num_of_days+startDay+1)
+			for (var i = 0; i < Math.ceil((num_of_days+startDay+1)/weekDays.length); i++)	//for each week to be displayed
+			{
+				var checkAllSpaces = true;
+				if (i > 0)
+				{
+					addRow()
+				}
+				
+				var tmpRow = []
+				for (var k = 0; k < weekLength; k++)
+				{
+					incCapDate(1)
+					
+					if (i === 0)
+					{
+						if (date !== "")
+						{
+							checkAllSpaces = false
+						}
+						tmpRow.push({text: date.toString(), cell_id: "dsdsd"  })
+					}
+					else
+					{
+
+						addCell(date.toString(), blankRow ? (i-1): i)
+					}
+				}
+				
+				if (checkAllSpaces === false && i === 0)		//if a row in the table is all blank, don't display it
+				{
+					addRow();
+					for (var p = 0; p < weekLength; p++)
+					{
+						
+						addCell(tmpRow[p].text, i)
+					}
+				}
+				else
+				{
+					blankRow = true
+				}
+				incCapDate(weekDays.length-weekLength)
+				
+			}
+		
+		
+		}
+		
+		
+		setupDays()
+		
+		console.log(dayCells.length)
+		for (var i = 0; i < dayCells.length; i++)
+		{
+			for (var k = 0; k < dayCells[i].length; k++)
+			{
+				console.log(i,k, ":  ", dayCells[i][k])
+			}
+		}
+		
+		return {
+			dayNames: dayNames
+			dayCells: dayCells
+			month: month
+			year: year
+			
+		}
+	}
+	
+
+	
+	
+	var testCalendar = new Calendar(5,9,2016)
+			
+					//How many days in the month
+	
+	
+	
+	
+	
+		
+		
+		
+		
+	
+	
+	</script>
+	
+</table>
+
+<table>
+	<hr>
+	
+	
+	<script>				//makes the table
+	
+	/*var date = "9/27/2016"
+	var schedule = {periods: ["1","2","3","4", "5"], times: [ ["8:15", "9:47"], ["9:52", "11:24"], ["12:06", "1:38"], ["1:43", "3:15"], ["6", "7"] ]}
+	
+	var resources = [{name: "ChromeBooks_1", ID: "000"}, {name: "ChromeBooks_2", ID: "001"}, {name: "IPads_1", ID: "002"}, {name: "Something_Else", ID: "003"}, {name: "Something_Else_2", ID: "004"}]
+	
+	
+	var periodNames = []
+	var timeIntervals = []
+	for (i = 0; i < schedule.periods.length; i++)
+	{
+		periodNames.push("Period "+ schedule.periods[i])
+	}
+	for (i = 0; i < schedule.times.length; i++)
+	{
+		timeIntervals.push(schedule.times[i][0] + "-" + schedule.times[i][1])
+	}
+	
+	
+
+	tableWriter.clearText()
+	tableWriter.addText("<tr>")
+	for (i = -1 ; i < periodNames.length; i++)
+	{
+		
+		tableWriter.addText("<th>")
+		if (i > -1)
+		{
+			tableWriter.addText(periodNames[i] + ": " + timeIntervals[i])
+		}
+		else
+		{
+			tableWriter.addText(date)
+		}
+		tableWriter.addText("</th>")
+	}
+	tableWriter.addText("</tr>")
+	tableWriter.documentWriteClear()
+	
+	
+	for (i = 0; i < resources.length; i++)	//for each week to be displayed
+	{
+		tableWriter.addText("<tr>")
+		tableWriter.addText("<td>" + resources[i].name + "</td>")
+		for (k = 0; k < periodNames.length; k++)					//for each week day
+		{
+			tableWriter.addText("<td>")
+			tableWriter.addText("<input type=checkbox name=vehicle value=Bike> <br>")
+			tableWriter.addText("</td>")
+		}
+		
+		tableWriter.addText("</tr>")
+		tableWriter.documentWriteClear()	
+		
+	}
+	
+
+	*/
+		
+		
+		
+		
+	
+	
+	</script>
+</table>
+
+</body>
+
+
+
+</html>

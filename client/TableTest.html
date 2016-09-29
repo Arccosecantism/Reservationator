@@ -10,8 +10,44 @@ table, th, td {
 </head>
 <body>
 
-<h1>Table Example</h1>
 
+	<script>
+	function DocumentWriter()
+	{
+		this.docTxt = ""
+		this.clearText = function()
+		{
+			this.docTxt = ""
+		}
+		this.addText = function(txt)
+		{
+			this.docTxt += txt
+		}
+		this.overwriteText = function(txt)
+		{
+			this.docTxt = txt;
+		}
+		this.documentWrite = function()
+		{
+			document.write(this.docTxt)
+		}
+		this.documentWriteClear = function()
+		{
+			document.write(this.docTxt)
+			this.docTxt = ""
+		}
+		this.consoleLog = function()
+		{
+			console.log("StoredText:  " + this.docTxt)
+		}
+	}
+	
+	</script>
+
+
+
+
+<h1>Table Example</h1>
 
 <table style="width:100%">
 
@@ -20,36 +56,129 @@ table, th, td {
 	
 	
 	
-	var startIncrement = 2		// How many days you start into the month
-	var days = 30;				//How many days in the month
+			
+					//How many days in the month
 	var weekLength = 5			//How many days you care about
 	
 	
 	
 	
+	function getStartInc(month, year)
+	{
+		var dateStr = year.toString()
+		if (month >= 10)
+		{
+			dateStr += "-" 
+		}
+		else
+		{
+			dateStr += "-0"
+		}
+		
+		dateStr += month.toString()
+		dateStr += "-01"
+		
+		var tmpDate = new Date(dateStr);
+		
+		var whichDay = tmpDate.getDay()
+		console.log(tmpDate.getDay());
+		
+		return whichDay
+	}
+	
+	
+	function isLeapYear(year)
+	{
+		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+	}
+	
+	
+	var tableWriter = new DocumentWriter() 
+	
+	
+		weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	
+	
+	
+	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+	var monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+	
+	
+	
+	var monthCounter = 1;
+	var year = 2000;
+	
+	if (isLeapYear(year))
+	{
+		monthLengths[1] = 29;
+	}
+	
+	
+	var days = monthLengths[monthCounter];
+	
+	
+	var startIncrement = getStartInc(monthCounter+1, year)// How many days you start into the month
 	
 	var startIncrementCounter = startIncrement;
-	var tableStr = ""
+
 	
-	var startCounting = false
+	function incMonth()
+	{
+		
+		monthCounter++;
+		if (monthCounter >= 12)
+		{
+			monthCounter = 0;
+			year += 1;
+			document.getElementById("yearText").innerHTML = year.toString()
+		}
+		document.getElementById("monthText").innerHTML = months[monthCounter]
+		console.log(months[monthCounter])
+	}
 	
-	weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+	function decMonth()
+	{
+		monthCounter--;
+		if (monthCounter < 0)
+		{
+			monthCounter = 11;
+			year -= 1;
+			document.getElementById("yearText").innerHTML = year.toString()
+		}
+		document.getElementById("monthText").innerHTML = months[monthCounter]
+		console.log(months[monthCounter])
+	}
 	
-	tableStr += "<tr>"
+	tableWriter.addText("<tr>") 
+	tableWriter.addText("<th>" + "<button id=PrevMonth type=button><<<</button>" + "</th>" )
+	tableWriter.addText("<th id=monthText>" + months[monthCounter] + "</th>")
+	tableWriter.addText("<th id=yearText>" + year.toString() + "</th>" )
+	tableWriter.addText("<th>" + "<button id=NextMonth type=button>>>></button>" + "</th>" )
+	tableWriter.addText("</tr>")
+	tableWriter.documentWriteClear();
+	
+	document.getElementById("NextMonth").onclick = incMonth;
+	document.getElementById("PrevMonth").onclick = decMonth;
+	
+	
+	tableWriter.addText("<tr>")
 	for (i = 0 ; i < weekLength; i++)
 	{
-		tableStr += "<th>"
-		tableStr += weekDays[i]
-		tableStr += "</th>"
+		tableWriter.addText("<th>")
+		tableWriter.addText(weekDays[i])
+		tableWriter.addText("</th>")
 	}
-	tableStr += "</tr>"
-	document.write(tableStr);
+	tableWriter.addText("</tr>")
+	tableWriter.documentWriteClear();
 	
 	
 	
 	var date = 0;
 	
-	tableStr = ""
+	
+	
+	
+	var startCounting = false
 	
 	
 	function incCapDate(times, days)	//Increments the date <times> times. It also caps the date at the day max, 
@@ -82,7 +211,6 @@ table, th, td {
 				{
 					startCounting = true;
 				}
-				console.log(startIncrementCounter)
 				incCapDate(times-1, days)
 			}
 		}
@@ -93,26 +221,25 @@ table, th, td {
 	for (i = 0; i < Math.ceil((days+startIncrement+1)/7); i++)	//for each week to be displayed
 	{
 		var checkAllSpaces = true
-		tableStr += "<tr>"
+		tableWriter.addText("<tr>")
 		for (k = 0; k < weekLength; k++)					//for each week day
 		{
-			tableStr += "<td>"
+			tableWriter.addText("<td>")
 			incCapDate(1, days)
 			if (date !== "")
 			{
 				checkAllSpaces = false
 			}
-			tableStr += date.toString()						//build the string
-			tableStr += "</td>"
+			tableWriter.addText(date.toString())						//build the string
+			tableWriter.addText("</td>")
 		}
 		
-		tableStr += "</tr>"
+		tableWriter.addText("</tr>")
 		if (checkAllSpaces === false)		//if a row in the table is all blank, don't display it
 		{
-			document.write(tableStr);		//write the row
+			tableWriter.documentWrite();		//write the row
 		}
-		
-		tableStr = ""
+		tableWriter.clearText()
 		incCapDate(7-weekLength, days)
 		
 	}
@@ -136,12 +263,12 @@ table, th, td {
 	
 	<script>				//makes the table
 	
-	
-	
+	var date = "9/27/2016"
 	var schedule = {periods: ["1","2","3","4", "5"], times: [ ["8:15", "9:47"], ["9:52", "11:24"], ["12:06", "1:38"], ["1:43", "3:15"], ["6", "7"] ]}
 	
 	var resources = [{name: "ChromeBooks_1", ID: "000"}, {name: "ChromeBooks_2", ID: "001"}, {name: "IPads_1", ID: "002"}, {name: "Something_Else", ID: "003"}, {name: "Something_Else_2", ID: "004"}]
-		
+	
+	
 	var periodNames = []
 	var timeIntervals = []
 	for (i = 0; i < schedule.periods.length; i++)
@@ -154,47 +281,40 @@ table, th, td {
 	}
 	
 	
-	
-	
-	
-	var tableStr = ""
 
-	
-	tableStr += "<tr>"
+	tableWriter.clearText()
+	tableWriter.addText("<tr>")
 	for (i = -1 ; i < periodNames.length; i++)
 	{
 		
-		tableStr += "<th>"
+		tableWriter.addText("<th>")
 		if (i > -1)
 		{
-			tableStr += periodNames[i] + ": " + timeIntervals[i]
+			tableWriter.addText(periodNames[i] + ": " + timeIntervals[i])
 		}
-		tableStr += "</th>"
-		console.log(tableStr)
+		else
+		{
+			tableWriter.addText(date)
+		}
+		tableWriter.addText("</th>")
 	}
-	tableStr += "</tr>"
-	document.write(tableStr)
-	
-	tableStr =  ""
+	tableWriter.addText("</tr>")
+	tableWriter.documentWriteClear()
 	
 	
 	for (i = 0; i < resources.length; i++)	//for each week to be displayed
 	{
-		tableStr += "<tr>"
-		tableStr += "<td>" + resources[i].name + "</td>"
+		tableWriter.addText("<tr>")
+		tableWriter.addText("<td>" + resources[i].name + "</td>")
 		for (k = 0; k < periodNames.length; k++)					//for each week day
 		{
-			tableStr += "<td>"
-			tableStr += "<input type=checkbox name=vehicle value=Bike> <br>"
-			tableStr += "</td>"
+			tableWriter.addText("<td>")
+			tableWriter.addText("<input type=checkbox name=vehicle value=Bike> <br>")
+			tableWriter.addText("</td>")
 		}
 		
-		tableStr += "</tr>"
-
-		document.write(tableStr);		
-
-		
-		tableStr = ""
+		tableWriter.addText("</tr>")
+		tableWriter.documentWriteClear()	
 		
 	}
 	
