@@ -10,53 +10,15 @@ table, th, td {
 </head>
 <body>
 
-	<script id="Calendar" type="text/template">
+	<button type="button" id = "prevMonth"><<<</button>
+	<p id="currentMonth">Month</p>
+	<p id="currentYear">Year</p>
 	
-		<table style="width:100%">
-		
-			<tr>
-				
-				<td
-			
-			</tr>
-		
-		
-		</table>
+	<button type="button" id = "nextMonth">>>></button>
 	
-	</script>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script>
-	"use strict";
-	function DocumentWriter()
-	{
-		var docTxt = ""
-		var clearText = function()
-		{
-			docTxt = ""
-		}
-		var addText = function(txt)
-		{
-			docTxt += txt
-		}
-		var overwriteText = function(txt)
-		{
-			docTxt = txt;
-		}
-		var documentWrite = function()
-		{
-			document.write(docTxt)
-		}
-		var documentWriteClear = function()
-		{
-			document.write(docTxt)
-			docTxt = ""
-		}
-		var consoleLog = function()
-		{
-			console.log("StoredText:  " + docTxt)
-		}
-	}
-	
+
 	function Calendar(data)
 	{
 		var dayNames = [];
@@ -213,14 +175,7 @@ table, th, td {
 			}
 		}
 		
-		/*return {
-			dayNames: dayNames
-			dayCells: dayCells
-			month: month
-			year: year
-			
-		}
-		*/
+		return {	dayNames: dayNames,	dayCells: dayCells}
 	}
 	
 
@@ -229,11 +184,95 @@ table, th, td {
 			 {date: "2016-04-07", day: 2}, {date: "2016-04-08", day: 3}, {date: "2016-04-09", day: 4}]
 	//var data = getData()
 	var testCalendar = new Calendar(data)
-			
+	createTable()
 					//How many days in the month
+					
+	//will be replaced by some current month thing maybe
+	
+	var yearCounter = 2016;
+	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+	var monthCounter = 9
+	function incMonth()
+	{
+		monthCounter++
+		if (monthCounter === 12)
+		{
+			yearCounter ++;
+			monthCounter = 0;
+		}
+		$("#currentMonth").text(months[monthCounter])
+		$("#currentYear").text(yearCounter)
+		createTable()
+		/*data = newData
+			testCalendar = new Calendar(data);
+		*/ 
+	}
+	
+	function decMonth()
+	{
+		monthCounter--
+		if (monthCounter === -1)
+		{
+			yearCounter --;
+			monthCounter = 11;
+		}
+		$("#currentMonth").text(months[monthCounter])
+		$("#currentYear").text(yearCounter)
+		createTable()
+		/*data = newData
+			testCalendar = new Calendar(data)
+		*/ 
+	}
+	
+	
+	function createTable()
+	{
+		var tableText = ""
+		tableText += "<table>"
+		
+		tableText += "<tr>"
+		for (var i = 0; i < testCalendar.dayNames.length; i++)
+		{
+			var tr = ""
+			tr += "<th id="
+			tr += testCalendar.dayNames[i].cell_id
+			tr += ">"
+			tr += testCalendar.dayNames[i].text
+			tr += "</td>"
+			
+		}
+		tableText += tr
+		tableText += "</tr>"
+		
+		
+		
+		for (var i = 0; i < testCalendar.dayCells.length; i++)
+		{
+			tableText += "<tr>"
+			for (var k = 0 ; k < testCalendar.dayCells[i].length; k++)
+			{
+				tableText += "<td id="
+				tableText += testCalendar.dayCells[i][k].cell_id
+				tableText += testCalendar.dayCells[i][k].text
+				tableText += "</td>"
+			}
+			tableText += "</tr>"
+		}
+		
+		
+		tableText += "</table>"
+		
+		document.write(tableText)
+	}
 	
 	
 	
+	$("#nextMonth").click(incMonth)
+	$("#prevMonth").click(decMonth)
+	
+
+
+
 	
 	
 		
@@ -244,9 +283,7 @@ table, th, td {
 	
 	</script>
 	
-</table>
 
-<table>
 	<hr>
 	
 	
