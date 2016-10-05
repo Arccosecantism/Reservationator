@@ -16,6 +16,8 @@ table, th, td {
 	
 	<button type="button" id = "nextMonth">>>></button>
 	
+	<hr id=tableDivider>
+		
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script>
 
@@ -96,7 +98,7 @@ table, th, td {
 		
 		var setupWeekDays = function()
 		{
-			weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+			weekDays = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 		}
 		
 		setupWeekDays()
@@ -116,7 +118,7 @@ table, th, td {
 		
 		var dataDay = function(index)
 		{
-			if (index > 0 && index < data.length)
+			if (index >= 0 && index < data.length)
 			{	
 				return data[index].date.split("-")[2]
 			}
@@ -181,10 +183,12 @@ table, th, td {
 
 	var data  = [{date: "2016-04-01", day: 3}, {date: "2016-04-02", day: 4}, {date: "2016-04-03", day: 5},
 			 {date: "2016-04-04", day: 6}, {date: "2016-04-05", day: 0}, {date: "2016-04-06", day: 1},
-			 {date: "2016-04-07", day: 2}, {date: "2016-04-08", day: 3}, {date: "2016-04-09", day: 4}]
+			 {date: "2016-04-07", day: 2}, {date: "2016-04-08", day: 3}, {date: "2016-04-09", day: 4},
+			 {date: "2016-04-10", day: 5}, {date: "2016-04-11", day: 6}, {date: "2016-04-12", day: 0},
+			 {date: "2016-04-13", day: 1}, {date: "2016-04-14", day: 2}, {date: "2016-04-15", day: 3}]
 	//var data = getData()
 	var testCalendar = new Calendar(data)
-	createTable()
+	
 					//How many days in the month
 					
 	//will be replaced by some current month thing maybe
@@ -192,6 +196,10 @@ table, th, td {
 	var yearCounter = 2016;
 	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 	var monthCounter = 9
+	$("#currentMonth").text(months[monthCounter])
+	$("#currentYear").text(yearCounter)
+	
+	createTable()
 	function incMonth()
 	{
 		monthCounter++
@@ -224,21 +232,23 @@ table, th, td {
 		*/ 
 	}
 	
-	
+	console.log(testCalendar.dayNames)
 	function createTable()
 	{
+		$("#calendar").remove()
 		var tableText = ""
-		tableText += "<table>"
+		tableText += "<table id=calendar>"
 		
+		var tr = ""
 		tableText += "<tr>"
 		for (var i = 0; i < testCalendar.dayNames.length; i++)
 		{
-			var tr = ""
+			
 			tr += "<th id="
 			tr += testCalendar.dayNames[i].cell_id
 			tr += ">"
 			tr += testCalendar.dayNames[i].text
-			tr += "</td>"
+			tr += "</th>"
 			
 		}
 		tableText += tr
@@ -249,20 +259,24 @@ table, th, td {
 		for (var i = 0; i < testCalendar.dayCells.length; i++)
 		{
 			tableText += "<tr>"
+			var tr = ""
 			for (var k = 0 ; k < testCalendar.dayCells[i].length; k++)
 			{
-				tableText += "<td id="
-				tableText += testCalendar.dayCells[i][k].cell_id
-				tableText += testCalendar.dayCells[i][k].text
-				tableText += "</td>"
+				
+				tr += "<td id="
+				tr += testCalendar.dayCells[i][k].cell_id
+				tr += ">"
+				tr += testCalendar.dayCells[i][k].text
+				tr += "</td>"
 			}
+			tableText+= tr
 			tableText += "</tr>"
 		}
 		
 		
 		tableText += "</table>"
-		
-		document.write(tableText)
+		console.log(tableText)
+		$("#nextMonth").after(tableText)
 	}
 	
 	
@@ -284,7 +298,7 @@ table, th, td {
 	</script>
 	
 
-	<hr>
+
 	
 	
 	<script>				//makes the table
