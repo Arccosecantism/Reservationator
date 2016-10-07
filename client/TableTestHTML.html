@@ -180,19 +180,16 @@ table, th, td {
 		return {	dayNames: dayNames,	dayCells: dayCells}
 	}
 	
+	
+	
+	
 
 	var data  = [{date: "2016-04-01", day: 3}, {date: "2016-04-02", day: 4}, {date: "2016-04-03", day: 5},
 			 {date: "2016-04-04", day: 6}, {date: "2016-04-05", day: 0}, {date: "2016-04-06", day: 1},
 			 {date: "2016-04-07", day: 2}, {date: "2016-04-08", day: 3}, {date: "2016-04-09", day: 4},
 			 {date: "2016-04-10", day: 5}, {date: "2016-04-11", day: 6}, {date: "2016-04-12", day: 0},
 			 {date: "2016-04-13", day: 1}, {date: "2016-04-14", day: 2}, {date: "2016-04-15", day: 3}]
-	//var data = getData()
 	var testCalendar = new Calendar(data)
-	
-					//How many days in the month
-					
-	//will be replaced by some current month thing maybe
-	
 	var yearCounter = 2016;
 	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 	var monthCounter = 9
@@ -255,7 +252,6 @@ table, th, td {
 		tableText += "</tr>"
 		
 		
-		
 		for (var i = 0; i < testCalendar.dayCells.length; i++)
 		{
 			tableText += "<tr>"
@@ -266,6 +262,11 @@ table, th, td {
 				tr += "<td id="
 				tr += testCalendar.dayCells[i][k].cell_id
 				tr += ">"
+				tr += "<button type=button"
+				tr += "id=button_"
+				tr += "r" + i + "c" + k + ">"
+				tr += "Schedule"
+				tr += "</button>"
 				tr += testCalendar.dayCells[i][k].text
 				tr += "</td>"
 			}
@@ -277,6 +278,19 @@ table, th, td {
 		tableText += "</table>"
 		console.log(tableText)
 		$("#nextMonth").after(tableText)
+		
+		
+		for (var i = 0; i < testCalendar.dayCells.length; i++)
+		{
+			for (var k = 0 ; k < testCalendar.dayCells[i].length; k++)
+			{
+				jq_id_str = "#button_r" + i + "c" + k 
+				$(jq_id_str).onclick = function() 
+				{
+					openModal(/*testCalendar[i][k] -- get date somehow*/ "date")
+				}
+			}
+		}
 	}
 	
 	
@@ -288,27 +302,46 @@ table, th, td {
 
 
 	
-	
-		
-		
-		
-		
-	
-	
-	</script>
-	
+	/*<div id="myModal" class="modal">
 
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">×</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div>
+*/
+	function openModal(date)
+	{
+		console.log("entered")
+		var modalText = ""
+		//modalText += "<div id=myModal class=modal>" + "<div class=modal-content>" + "<span class=close id=close_button>x</span>"
+		modalText +=  "<p id=testModal>text"
+		modalText += "<button type=button " 
+		modalText += "id=close_button>"
+		modalText += "HideText"
+		modalText += "</button></p>"
+		//modalText += "</div> </div>"
+		
+		$("#calendar").after(modalText)
+		
+		//$("#testModal").hide()
+		
+		$("#close_button").onclick = function()
+		{
+			$("#myModal").hide()
+		}
+	}
 
 	
-	
-	<script>				//makes the table
 	
 	/*var date = "9/27/2016"
 	var schedule = {periods: ["1","2","3","4", "5"], times: [ ["8:15", "9:47"], ["9:52", "11:24"], ["12:06", "1:38"], ["1:43", "3:15"], ["6", "7"] ]}
 	
 	var resources = [{name: "ChromeBooks_1", ID: "000"}, {name: "ChromeBooks_2", ID: "001"}, {name: "IPads_1", ID: "002"}, {name: "Something_Else", ID: "003"}, {name: "Something_Else_2", ID: "004"}]
 	
-	
+	tableText = ""
 	var periodNames = []
 	var timeIntervals = []
 	for (i = 0; i < schedule.periods.length; i++)
@@ -356,10 +389,9 @@ table, th, td {
 		tableWriter.addText("</tr>")
 		tableWriter.documentWriteClear()	
 		
-	}
-	
+	}*/
 
-	*/
+	
 		
 		
 		
