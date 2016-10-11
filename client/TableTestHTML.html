@@ -189,6 +189,8 @@ table, th, td {
 			 {date: "2016-04-07", day: 2}, {date: "2016-04-08", day: 3}, {date: "2016-04-09", day: 4},
 			 {date: "2016-04-10", day: 5}, {date: "2016-04-11", day: 6}, {date: "2016-04-12", day: 0},
 			 {date: "2016-04-13", day: 1}, {date: "2016-04-14", day: 2}, {date: "2016-04-15", day: 3}]
+			 
+			 
 	var testCalendar = new Calendar(data)
 	var yearCounter = 2016;
 	var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -230,6 +232,8 @@ table, th, td {
 	}
 	
 	console.log(testCalendar.dayNames)
+	
+	
 	function createTable()
 	{
 		$("#calendar").remove()
@@ -262,11 +266,16 @@ table, th, td {
 				tr += "<td id="
 				tr += testCalendar.dayCells[i][k].cell_id
 				tr += ">"
-				tr += "<button type=button"
-				tr += "id=button_"
-				tr += "r" + i + "c" + k + ">"
-				tr += "Schedule"
-				tr += "</button>"
+				
+				if (testCalendar.dayCells[i][k].text != "")
+				{
+					tr += "<button type=button "
+					tr += "id=button_"
+					tr += "r" + i + "c" + k + ">"
+					tr += "Schedule"
+					tr += "</button>"
+				}
+				
 				tr += testCalendar.dayCells[i][k].text
 				tr += "</td>"
 			}
@@ -284,11 +293,21 @@ table, th, td {
 		{
 			for (var k = 0 ; k < testCalendar.dayCells[i].length; k++)
 			{
-				jq_id_str = "#button_r" + i + "c" + k 
-				$(jq_id_str).onclick = function() 
+				if (testCalendar.dayCells[i][k].text != "")
 				{
-					openModal(/*testCalendar[i][k] -- get date somehow*/ "date")
+				
+					var jq_id_str = "#button_r" + i + "c" + k 
+		
+					$(jq_id_str).click(function() 
+						{
+							console.log("setFunction")
+							openModal(yearCounter + "-" + (monthCounter + 1) + "-" + )
+						}
+					)
 				}
+				
+
+				
 			}
 		}
 	}
@@ -317,7 +336,9 @@ table, th, td {
 		console.log("entered")
 		var modalText = ""
 		//modalText += "<div id=myModal class=modal>" + "<div class=modal-content>" + "<span class=close id=close_button>x</span>"
-		modalText +=  "<p id=testModal>text"
+		var mtID = "testModal" + date
+		modalText +=  "<p id="
+		modalText += mtID + ">text"
 		modalText += "<button type=button " 
 		modalText += "id=close_button>"
 		modalText += "HideText"
@@ -328,10 +349,11 @@ table, th, td {
 		
 		//$("#testModal").hide()
 		
-		$("#close_button").onclick = function()
-		{
-			$("#myModal").hide()
-		}
+		$("#close_button").click(function()
+			{
+				$("#" + mtID).hide()
+			}
+		)
 	}
 
 	
