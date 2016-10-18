@@ -9,12 +9,14 @@
 <script>
 	
 	
-	function FormCreator()
+	function FormCreator(actionName)
 	{
 		var formStr = ""
 		var init = function()
 		{
-			formStr = "<form>"
+			formStr = "<form action="
+			formStr += actionName
+			formStr += ">"
 		}
 		
 		var createName = function(name)
@@ -23,17 +25,55 @@
 			formStr += ":<br>"
 		}
 		
-		var addInput = function(name, type)
+		var addInput = function(name, type, xdef)
 		{
 
+			if (type === "text")
+			{
+				addTextField(name)
+			}
 			
-			
-			formStr += "<input type="
-			formStr += type
+			if (type === "radio")
+			{
+				addRadioButtonField(name, xedf[0], xedf[1])
+			}
+
+			if (type === "submit")
+			{
+				addSubmitField(name)
+			}
+		}
+		
+		
+		
+		var addTextField = function(name)
+		{
+			formStr += "<input type=text
 			formStr += " name="
 			formStr += name
 			formStr += "><br>"
-			
+		}
+		
+		var addRadioButtonField = function(name, value, checked)
+		{
+			formStr += "<input type=radio
+			formStr += " name="
+			formStr += name
+			formStr += " value="
+			formStr += value
+			if (checked === true)
+			{
+				formStr += " checked"
+			}
+			formStr += "><br>"
+		}
+		
+		var addSubmitField = function(value)
+		{
+			formStr += "<input type=submit"
+			formStr += " value="
+			formStr += value
+			formStr += "><br>"
 		}
 		
 		var createForm = function()
