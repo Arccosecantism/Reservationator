@@ -9,7 +9,7 @@
 <script>
 	
 	
-	function FormCreator(actionName)
+	function FormCreator(actionName, autoSubmit)
 	{
 		var formStr = ""
 		var init = function()
@@ -18,6 +18,8 @@
 			formStr += actionName
 			formStr += ">"
 		}
+		init()
+		
 		
 		var createName = function(name)
 		{
@@ -30,33 +32,59 @@
 
 			if (type === "text")
 			{
-				addTextField(name)
+				if (!xdef)
+				{
+					addEmptyText(name)
+				}
+				else
+				{
+					addFilledText(name, xdef[0])
+				}
+				
 			}
 			
 			if (type === "radio")
 			{
-				addRadioButtonField(name, xedf[0], xedf[1])
+				addRadioButton(name, xdef[0], xdef[1])
 			}
-
-			if (type === "submit")
+			
+			if ((type === "select") || (type === "drop"))
 			{
-				addSubmitField(name)
+				addSelect(name, xdef)
+			}
+			
+			if (type === "button")
+			{
+				addButton(name, value)
 			}
 		}
 		
 		
 		
-		var addTextField = function(name)
+		var addEmptyText = function(name)
 		{
-			formStr += "<input type=text
+			formStr += "<input type=text"
 			formStr += " name="
 			formStr += name
 			formStr += "><br>"
 		}
 		
-		var addRadioButtonField = function(name, value, checked)
+		var addFilledText = function(name, value)
 		{
-			formStr += "<input type=radio
+			formStr += "<input type=text"
+			formStr += " name="
+			formStr += name
+			formStr += " value="
+			formStr += value
+			formStr += "><br>"
+		
+		
+		}
+		
+		
+		var addRadioButton = function(name, value, checked)
+		{
+			formStr += "<input type=radio"
 			formStr += " name="
 			formStr += name
 			formStr += " value="
@@ -68,7 +96,7 @@
 			formStr += "><br>"
 		}
 		
-		var addSubmitField = function(value)
+		var addSubmit = function(value)
 		{
 			formStr += "<input type=submit"
 			formStr += " value="
@@ -76,24 +104,68 @@
 			formStr += "><br>"
 		}
 		
+		
+		var addSelect = function(name, value_names)
+		{
+			formStr += "<select name="
+			formStr += name + ">"
+			for (var i = 0 ; i < value_names.length; i++)
+			{
+				addOption(value_names[0], value_names[1], value_names[2])
+				
+			}
+			formStr += "</select>"
+			formStr += "<br>"
+		}
+		
+		var addOption = function(value, name, selected)
+		{
+				formStr += "<option value="
+				formStr += value 
+				if (selected === true)
+				{
+					formStr += " selected"
+				}
+				formStr += ">"
+				formStr += name + "</option>"
+		}
+		
+		var addButton = function(name, onclick)
+		{
+			formStr += "<button type=button onclick="
+			formStr += onclick
+			formStr += ">"
+			formStr += name
+			formStr += "</button>"
+			formStr += "<br"
+		}
+		
+		
+		
 		var createForm = function()
 		{
-		
+			if (autoSubmit === true)
+			{
+				addSubmit("submit")
+			}
 			formStr += "</form>"
 			document.write(formStr)
 			formStr = ""
 		}
 		
+		
+		
+		
 		return {addInput: addInput, createForm: createForm }
 	}
 	
 	
-	formMaker = new FormCreator();
+	formMaker = new FormCreator("");
 	var jsonOBJ =  {
-						room : "text",
-						description : "multitext",
-						test : "drop:one,two,three",
-						assure : "tf"
+						room : ["text", ["Room 113"]],
+						description : ["text"],
+						test : ["drop", ["one", "two", "three"]],
+						assure : ["tf"]
 					}    
  
 		
@@ -102,7 +174,14 @@
 	{
 	  if (jsonOBJ.hasOwnProperty(key)) 
 	  {
-		formMaker.addInput(key, jsonOBJ[key])
+		if (jsonOBJ[key].length === 2)
+		{
+			formMaker.addInput(key, jsonOBJ[key][0], jsonOBJ[key][1])
+		}
+		else if (jsonOBJ[key].length === 1)
+		{
+			formMaker.addInput(key, jsonOBJ[key][0])
+		}
 		
 		
 		
