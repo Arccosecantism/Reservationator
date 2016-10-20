@@ -111,7 +111,7 @@
 			formStr += name + ">"
 			for (var i = 0 ; i < value_names.length; i++)
 			{
-				addOption(value_names[0], value_names[1], value_names[2])
+				addOption(value_names[i][0], value_names[i][1], value_names[i][2])
 				
 			}
 			formStr += "</select>"
@@ -162,10 +162,9 @@
 	
 	formMaker = new FormCreator("");
 	var jsonOBJ =  {
-						room : ["text", ["Room 113"]],
+						room : ["text", ["Room_113"]],
 						description : ["text"],
-						test : ["drop", ["one", "two", "three"]],
-						assure : ["tf"]
+						test : ["drop", [["op1", "one", 0], ["op2", "two", 1], ["op3", "three", 0]]],
 					}    
  
 		
