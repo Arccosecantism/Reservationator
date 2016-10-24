@@ -5,6 +5,7 @@
 </head>
 
 <body>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
 	
@@ -55,7 +56,7 @@
 			
 			if (type === "button")
 			{
-				addButton(name, value)
+				addButton(name, xdef)
 			}
 		}
 		
@@ -137,7 +138,7 @@
 			formStr += ">"
 			formStr += name
 			formStr += "</button>"
-			formStr += "<br"
+			formStr += "<br>"
 		}
 		
 		
@@ -165,6 +166,7 @@
 						room : ["text", ["Room_113"]],
 						description : ["text"],
 						test : ["drop", [["op1", "one", "0"], ["op2", "two", "1"], ["op3", "three", "0"]]],
+						testButton : ["button", "alert('works')"]
 					}    
  
 		
