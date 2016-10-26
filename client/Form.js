@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Table Trial</title>
-</head>
 
-<body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
@@ -94,7 +88,7 @@
 			{
 				formStr += " checked"
 			}
-			formStr += "><br>"
+			formStr += ">" + value + "<br>"
 		}
 		
 		var addSubmit = function(value)
@@ -154,10 +148,18 @@
 			formStr = ""
 		}
 		
+		var getFormString = function()
+		{
+						if (autoSubmit == true)
+			{
+				addSubmit("submit")
+			}
+			formStr += "</form>"
+			return formStr;
+		}
 		
 		
-		
-		return {addInput: addInput, createForm: createForm }
+		return {addInput: addInput, createForm: createForm, getFormString: getFormString}
 	}
 	
 	
@@ -166,7 +168,8 @@
 						room : ["text", ["Room_113"]],
 						description : ["text"],
 						test : ["drop", [["op1", "one", "0"], ["op2", "two", "1"], ["op3", "three", "0"]]],
-						testButton : ["button", "alert('works')"]
+						testButton : ["button", "alert('works')"],
+						testRadio : ["radio", ["Celery", true]]
 					}    
  
 		
@@ -190,17 +193,5 @@
 	}
 	
 	formMaker.createForm()
-		
-		
-	
-
-	
 	
 </script>
-</table>
-
-</body>
-
-
-
-</html>
