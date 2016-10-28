@@ -240,13 +240,15 @@
 		{
 			formStr = "<form action="
 			formStr += actionName
+			formStr += " method=post"
 			formStr += ">"
 		}
 		init()
-		var createName = function(name)
+		var addName = function(name, lineBreaks)
 		{
 			formStr += name
-			formStr += ":<br>"
+			formStr += ": \t"
+			addLineBreak(lineBreaks)
 		}
 		var addInput = function(name, type, xdef)
 		{
@@ -280,6 +282,7 @@
 		
 		var addEmptyText = function(name)
 		{
+			
 			formStr += "<input type=text"
 			formStr += " name="
 			formStr += name
@@ -288,6 +291,7 @@
 		
 		var addFilledText = function(name, value)
 		{
+			
 			formStr += "<input type=text"
 			formStr += " name="
 			formStr += name
@@ -301,6 +305,7 @@
 		
 		var addRadioButton = function(name, value, checked)
 		{
+			
 			formStr += "<input type=radio"
 			formStr += " name="
 			formStr += name
@@ -315,6 +320,7 @@
 		
 		var addSubmit = function(value)
 		{
+			
 			formStr += "<input type=submit"
 			formStr += " value="
 			formStr += value
@@ -324,6 +330,7 @@
 		
 		var addSelect = function(name, value_names)
 		{
+
 			formStr += "<select name="
 			formStr += name + ">"
 			for (var i = 0 ; i < value_names.length; i++)
@@ -337,18 +344,19 @@
 		
 		var addOption = function(value, name, selected)
 		{
-				formStr += "<option value="
-				formStr += value 
-				if (selected == true)
-				{
-					formStr += " selected"
-				}
-				formStr += ">"
-				formStr += name + "</option>"
+			formStr += "<option value="
+			formStr += value 
+			if (selected == true)
+			{
+				formStr += " selected"
+			}
+			formStr += ">"
+			formStr += name + "</option>"
 		}
 		
 		var addButton = function(name, onclick)
 		{
+			
 			formStr += "<button type=button onclick="
 			formStr += onclick
 			formStr += ">"
@@ -384,13 +392,20 @@
 		{
 			formStr = ""
 		}
+		var addLineBreak = function(num)
+		{
+			for (var i = 0; i < num; i++)
+			{
+				formStr += "<br>"
+			}
+		}
 		
 		
-		return {addInput: addInput, createForm: createForm, getFormString: getFormString, clearForm: clearForm }
+		return {addInput: addInput, createForm: createForm, getFormString: getFormString, clearForm: clearForm, addLineBreak: addLineBreak, addName: addName }
 	}
 	
 	
-	formMaker = new FormCreator("", "1");
+	formMaker = new FormCreator("place.php", "1");
 	var jsonOBJ =  {
 						room : ["text", ["Room_113"]],
 						description : ["text"],
@@ -442,6 +457,7 @@ function openModal(date){
 		{
 		  if (jsonOBJ.hasOwnProperty(key)) 
 		  {
+			formMaker.addName(key)
 			if (jsonOBJ[key].length === 2)
 			{
 				formMaker.addInput(key, jsonOBJ[key][0], jsonOBJ[key][1])
